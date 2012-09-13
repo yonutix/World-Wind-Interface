@@ -41,7 +41,7 @@ class WWJ extends JFrame {
      * Constructor
      */
     WWJ() throws IOException {
-        super("Tema POO");//titlu
+        super("OOP Homework");
 
         //Task 1
         ww = new WorldWindowGLCanvas();
@@ -55,7 +55,8 @@ class WWJ extends JFrame {
         super.setMinimumSize(new Dimension(1280, 720));
 
         Dimension winSize = new Dimension(super.getWidth(), super.getHeight());
-        super.setLocation((this.screenSize.width - winSize.width) / 2, (this.screenSize.height - winSize.height) / 2);
+        super.setLocation((this.screenSize.width - winSize.width) / 2,
+                (this.screenSize.height - winSize.height) / 2);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//close button
         //end Task 1
 
@@ -86,47 +87,8 @@ class WWJ extends JFrame {
         //there are used several layers
         JLayeredPane lay = new JLayeredPane();
 
-        //flat-round globe button setup
-        JButton globeSh = new JButton(new ImageIcon("images/flatearth.jpg"));
-        globeSh.setBorder(null);
-        globeSh.setName("globe");
-        globeSh.addMouseListener(new StandardMouseListener());
-        lay.add(globeSh, new Integer(2));
+        addGraphicButtons(lay);
 
-        //Enable-Disable Political Boudaries button setup
-        JButton boundaries = new JButton(new ImageIcon("images/boundaries.jpg"));
-        boundaries.setBorder(null);
-        boundaries.setName("boundaries");
-        boundaries.addMouseListener(new StandardMouseListener());
-        lay.add(boundaries, new Integer(2));
-
-        //Earthquakes button setup
-        JButton earthquake = new JButton(new ImageIcon("images/earthquake.jpg"));
-        earthquake.setBorder(null);
-        earthquake.setName("earthquake");
-        earthquake.addMouseListener(new StandardMouseListener());
-        lay.add(earthquake, new Integer(2));
-
-        //Weather button setup
-        JButton weather = new JButton(new ImageIcon("images/weather.jpg"));
-        weather.setBorder(null);
-        weather.setName("weather");
-        weather.addMouseListener(new StandardMouseListener());
-        lay.add(weather, new Integer(2));
-
-        //Screenshot button setup
-        JButton screenShot = new JButton(new ImageIcon("images/screenshot.png"));
-        screenShot.setBorder(null);
-        screenShot.setName("ss");
-        screenShot.addMouseListener(new StandardMouseListener());
-        lay.add(screenShot, new Integer(2));
-
-        //Open file button Setup
-        JButton openFile = new JButton(new ImageIcon("images/openFile.jpg"));
-        openFile.setBorder(null);
-        openFile.setName("open");
-        openFile.addMouseListener(new StandardMouseListener());
-        lay.add(openFile, new Integer(2));
 
         //Surface measurement panel setup
         JPanel surfacePanel = new JPanel();
@@ -235,17 +197,64 @@ class WWJ extends JFrame {
         ww.setBounds(0, 0, this.getWidth(), this.getHeight() - 50);
         //Buttons and panels positions
         surfacePanel.setBounds(10, 133, 160, 30);
-        globeSh.setBounds(10, 20, 50, 50);
-        boundaries.setBounds(65, 20, 50, 50);
-        earthquake.setBounds(120, 20, 50, 50);
-        weather.setBounds(10, 75, 50, 50);
-        screenShot.setBounds(65, 75, 50, 50);
-        openFile.setBounds(120, 75, 50, 50);
+
+
+
+
+
         ruler.setBounds(175, 20, 50, 50);
         zoomPanel.setBounds(10, 480, 200, 100);
         scrollpane.setBounds(10, 170, 200, 300);
         cp.add(lay);
         setVisible(true);
+    }
+
+    public void addGraphicButtons(JLayeredPane lay) {
+        lay.add(createStandardButton("images/flatearth.jpg",
+                "globe",
+                new Rectangle(10, 20, 50, 50)),
+                new Integer(2));
+
+        //Enable-Disable Political Boudaries button setup        
+        lay.add(createStandardButton("images/boundaries.jpg",
+                "boundaries",
+                new Rectangle(65, 20, 50, 50)),
+                new Integer(2));
+
+
+
+        //Earthquakes button setup
+        lay.add(createStandardButton("images/earthquake.jpg",
+                "earthquake",
+                new Rectangle(120, 20, 50, 50)),
+                new Integer(2));
+
+        //Weather button setup
+        lay.add(createStandardButton("images/weather.jpg",
+                "weather",
+                new Rectangle(10, 75, 50, 50)),
+                new Integer(2));
+
+        //Screenshot button setup
+        lay.add(createStandardButton("images/screenshot.png",
+                "ss",
+                new Rectangle(65, 75, 50, 50)),
+                new Integer(2));
+
+        //Open file button Setup
+        lay.add(createStandardButton("images/openFile.jpg",
+                "open",
+                new Rectangle(120, 75, 50, 50)),
+                new Integer(2));
+    }
+
+    public JButton createStandardButton(String imageAddr, String name, Rectangle r) {
+        JButton bt = new JButton(new ImageIcon(imageAddr));
+        bt.setBorder(null);
+        bt.setName(name);
+        bt.addMouseListener(new StandardMouseListener());
+        bt.setBounds(r);
+        return bt;
     }
 
     /*
@@ -586,7 +595,7 @@ class WWJ extends JFrame {
             pack();
         }
     }
-    
+
     /*
      * Listener for deleting section
      * @vb  - panel to remove from
@@ -1872,10 +1881,10 @@ class WWJ extends JFrame {
 
 
     }
+
     /*
      * action listener for measuring the distance between several points on the globe
      */
-
     class measureActionListener implements ActionListener {
 
         JPanel Pfrom;
