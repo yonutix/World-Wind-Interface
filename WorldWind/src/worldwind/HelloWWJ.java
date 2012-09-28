@@ -195,10 +195,6 @@ class WWJ extends JFrame {
         //Buttons and panels positions
         surfacePanel.setBounds(10, 133, 160, 30);
 
-
-
-
-
         ruler.setBounds(175, 20, 50, 50);
         zoomPanel.setBounds(10, 480, 200, 100);
         scrollpane.setBounds(10, 170, 200, 300);
@@ -211,14 +207,11 @@ class WWJ extends JFrame {
                 "globe",
                 new Rectangle(10, 20, 50, 50)),
                 new Integer(2));
-
         //Enable-Disable Political Boudaries button setup        
         lay.add(createStandardButton("images/boundaries.jpg",
                 "boundaries",
                 new Rectangle(65, 20, 50, 50)),
                 new Integer(2));
-
-
 
         //Earthquakes button setup
         lay.add(createStandardButton("images/earthquake.jpg",
@@ -245,7 +238,9 @@ class WWJ extends JFrame {
                 new Integer(2));
     }
 
-    public JButton createStandardButton(String imageAddr, String name, Rectangle r) {
+    public JButton createStandardButton(String imageAddr, 
+            String name,
+            Rectangle r) {
         JButton bt = new JButton(new ImageIcon(imageAddr));
         bt.setBorder(null);
         bt.setName(name);
@@ -255,9 +250,9 @@ class WWJ extends JFrame {
     }
 
     /*
-     * Show a description panel near button
-     * @title - description title
-     * @description - description content
+     * \brief Show a description panel near button
+     * \param title - description title
+     * \param description - description content
      */
     public void tagContent(String title, String description, Point p) {
         infoTag.removeAll();
@@ -273,8 +268,8 @@ class WWJ extends JFrame {
 
 
     /*
-     * Disable a specific layer by name
-     * @layerName - layer to be disabled
+     * \brief Disable a specific layer by name
+     * \param layerName - layer to be disabled
      */
     public void disableLayer(String layerName) {
         LayerList layers = ww.getModel().getLayers();
@@ -286,7 +281,7 @@ class WWJ extends JFrame {
     }
 
     /**
-     * Default control buttons
+     * \brief Default control buttons
      */
     public void setDefaultControls() {
         ViewControlsLayer viewControlsLayer = new ViewControlsLayer();
@@ -299,7 +294,9 @@ class WWJ extends JFrame {
 
     void standardDialogBox(String title, String content) {
         JDialog standardDialogBox = new JDialog(this, title, true);
-        standardDialogBox.setLocation((screenSize.width - standardDialogBox.getWidth()) / 2, (screenSize.height - standardDialogBox.getHeight()) / 2);
+        standardDialogBox.setLocation(
+                (screenSize.width - standardDialogBox.getWidth()) / 2, 
+                (screenSize.height - standardDialogBox.getHeight()) / 2);
         standardDialogBox.setMinimumSize(new Dimension(400, 300));
         JPanel container = new JPanel();
         container.setLayout(new BoxLayout(container, BoxLayout.PAGE_AXIS));
@@ -308,16 +305,15 @@ class WWJ extends JFrame {
         container.add(titleC);
         container.add(contentC);
         standardDialogBox.add(container);
-
         standardDialogBox.pack();
         standardDialogBox.show();
 
 
     }
+    
     /*
-     * Creates the menu bar with about and exit items
+     * \brief Creates the menu bar with about and exit items
      */
-
     final public JMenuBar setMenuBar() {
 
         JMenuBar menuBar = new JMenuBar();
@@ -341,21 +337,18 @@ class WWJ extends JFrame {
         helpMenu.add(aboutMenuItem);
         return menuBar;
     }
+    
     /*
-     * return true if the globe is flat
+     * \return true if the globe is flat
      */
-
     public boolean isFlatGlobe() {
         return ww.getModel().getGlobe() instanceof FlatGlobe;
     }
 
-
-
     /*
-     * @jtf -  string for search
-     * returns a list with all point found
+     * \param jtf -  string for search
+     * \return a list with all point found
      */
-
     public java.util.List<PointOfInterest> textFieldPoints(String jtf) {
         String toFind = jtf.trim();
         java.util.List<PointOfInterest> poi = new ArrayList<PointOfInterest>();
@@ -376,13 +369,17 @@ class WWJ extends JFrame {
             return poi;
         }
         if (keyWords.size() == 2) {
-            Matcher matcher = (Pattern.compile("[0-9]")).matcher(keyWordsBrute[1]); //Street Address may have numbers in first field so use 2nd
+             //Street Address may have numbers in first field so use 2nd
+            Matcher matcher = 
+                    (Pattern.compile("[0-9]")).matcher(keyWordsBrute[1]);
             if (matcher.find()) {
                 keyWordsBrute[0] = keyWordsBrute[0].trim();
                 keyWordsBrute[1] = keyWordsBrute[1].trim();
                 poi.add(parseCoordinates(keyWordsBrute));
             } else {
-                poi = gz.findPlaces(keyWordsBrute[0].trim() + "+" + keyWordsBrute[1].trim());
+                poi = gz.findPlaces(keyWordsBrute[0].trim() +
+                        "+" +
+                        keyWordsBrute[1].trim());
             }
             return poi;
         }
@@ -402,26 +399,27 @@ class WWJ extends JFrame {
 
 
     /*
-     * if in the text field are passed coordinates
-     * @coords[] has two elements longitude and latitude
+     * \brief if in the text field are passed coordinates
+     * \param coords[] has two elements longitude and latitude
      */
     public PointOfInterest parseCoordinates(String coords[]) {
         if (isDecimalDegrees(coords)) {
             Double d1 = Double.parseDouble(coords[0].trim());
             Double d2 = Double.parseDouble(coords[1].trim());
             return new BasicPointOfInterest(LatLon.fromDegrees(d1, d2));
-        } else //may be in DMS
-        {
+        } 
+        else {
+            //may be in DMS
             Angle aLat = Angle.fromDMS(coords[0].trim());
             Angle aLon = Angle.fromDMS(coords[1].trim());
             return new BasicPointOfInterest(LatLon.fromDegrees(aLat.getDegrees(), aLon.getDegrees()));
         }
     }
+    
     /*
-     * if they are numbers
-     * @coords[] - vector to be verified, it has two elements
+     * \brief if they are numbers
+     * \param coords[] - vector to be verified, it has two elements
      */
-
     private boolean isDecimalDegrees(String[] coords) {
         try {
             Double.parseDouble(coords[0].trim());
@@ -431,10 +429,10 @@ class WWJ extends JFrame {
         }
         return true;
     }
+    
     /*
-     * load image when the open file button is pressed
+     * \brief load image when the open file button is pressed
      */
-
     public void loadImage() {
         JFileChooser fc = new JFileChooser(new File("."));
         int returnVal = fc.showOpenDialog(ww);
@@ -446,11 +444,15 @@ class WWJ extends JFrame {
 
                 JFrame wf = new JFrame("Image");
                 wf.setMinimumSize(new Dimension(1000, 600));
-                wf.setLocation((screenSize.width - wf.getWidth()) / 2, (screenSize.height - wf.getHeight()) / 2);
+                wf.setLocation((screenSize.width - wf.getWidth()) / 2, 
+                        (screenSize.height - wf.getHeight()) / 2);
                 JPanel container = new JPanel();
-                container.setLayout(new BoxLayout(container, BoxLayout.PAGE_AXIS));
+                container.setLayout(new BoxLayout(container, 
+                        BoxLayout.PAGE_AXIS));
                 if (image.getHeight() > 640 || image.getWidth() > 3360) {
-                    img = new ImageIcon(img.getImage().getScaledInstance(640, 360, java.awt.Image.SCALE_SMOOTH));
+                    img = new ImageIcon(img.getImage().getScaledInstance(640, 
+                            360, 
+                            java.awt.Image.SCALE_SMOOTH));
                 }
 
                 JLabel imgLabel = new JLabel(img);
@@ -469,10 +471,10 @@ class WWJ extends JFrame {
             }
         }
     }
+    
     /*
-     * take screenshot when screenshot button is pressed
+     * \brief take screenshot when screenshot button is pressed
      */
-
     public void takeScreenshot() {
         JFrame wf = new JFrame("Image");
         wf.setMinimumSize(new Dimension(1000, 600));
@@ -501,19 +503,14 @@ class WWJ extends JFrame {
         wf.setVisible(true);
     }
 
-
-
-
     /*
-     * Creates the JFrame with weather
+     * \brief Creates the JFrame with weather
      */
-
     public void weatherFrame() {
 
         JFrame wf = new JFrame("Weather");
         wf.setMinimumSize(new Dimension(600, 500));
         wf.setLocation((screenSize.width - wf.getWidth()) / 2, (screenSize.height - wf.getHeight()) / 2);
-
 
         JPanel container = new JPanel();
         /*Location*/
@@ -574,10 +571,9 @@ class WWJ extends JFrame {
 
     }
 
-    /*
-     * Creates the earthquakes JFrame
+    /**
+     * \brief Creates the earthquakes JFrame
      */
-
     public void eartquakeFrame() {
         try {
             JFrame eqf = new JFrame("Earthquakes");
@@ -702,10 +698,8 @@ class WWJ extends JFrame {
 
     }
 
-
-
     /*
-     * About window
+     * \brief About window
      * 
      */
     final public void aboutWindow() {
@@ -738,7 +732,6 @@ class WWJ extends JFrame {
 
 
     }
-
 
     public static void main(String args[]) throws IOException {
         new WWJ();
