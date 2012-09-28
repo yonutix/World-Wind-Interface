@@ -1,21 +1,21 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package worldwind;
+
 import javax.swing.*;
 import java.awt.event.*;
 import java.beans.*;
 import java.awt.*;
 import gov.nasa.worldwind.util.measure.*;
 import gov.nasa.worldwind.awt.*;
+
 /*
- * Mouse listener for 
- * @panel - surface response panel
- * @field - field for write surface dimension
+ * \class SurfaceMouseListener Mouse listener for 
  */
 class SurfaceMouseListener implements MouseListener {
-
+    
+    /**
+     * \param panel - surface response panel
+     * \param field - field for write surface dimension
+     */
     JPanel panel;
     JTextField field;
     MeasureTool measureTool;
@@ -45,7 +45,8 @@ class SurfaceMouseListener implements MouseListener {
             bt.setIcon(new ImageIcon("images/metalrulerOver.jpg"));
         } else {
             measureTool.setArmed(true);
-            ((Component) ww).setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+            ((Component) ww).setCursor(
+                    Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
             panel.setVisible(true);
             //anonim listener
             measureTool.addPropertyChangeListener(new PropertyChangeListener() {
@@ -56,7 +57,9 @@ class SurfaceMouseListener implements MouseListener {
             });
             bt.setIcon(new ImageIcon("images/stopMeasureOver.jpg"));
         }
-        parent.tagContent("2D/3D Globe", "Select points and measure the surface described", bt.getLocationOnScreen());
+        parent.tagContent("2D/3D Globe",
+                "Select points and measure the surface described",
+                bt.getLocationOnScreen());
         parent.infoTag.setVisible(true);
     }
 

@@ -8,8 +8,6 @@ import gov.nasa.worldwind.poi.*;
 import gov.nasa.worldwind.render.*;
 import gov.nasa.worldwind.layers.MarkerLayer;
 import gov.nasa.worldwind.render.markers.*;
-import gov.nasa.worldwind.render.Material;
-import java.beans.*;
 import gov.nasa.worldwind.geom.*;
 import gov.nasa.worldwind.util.measure.*;
 import java.io.*;
@@ -21,7 +19,6 @@ import javax.swing.*;
 import java.net.*;
 import java.util.*;
 import java.util.regex.*;
-import java.awt.print.*;
 
 class WWJ extends JFrame {
 

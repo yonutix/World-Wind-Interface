@@ -1,37 +1,14 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package worldwind;
 
-import gov.nasa.worldwind.globes.*;
-import gov.nasa.worldwind.*;
-import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
-import gov.nasa.worldwind.layers.*;
-import gov.nasa.worldwind.poi.*;
-import gov.nasa.worldwind.render.*;
-import gov.nasa.worldwind.layers.MarkerLayer;
-import gov.nasa.worldwind.render.markers.*;
-import gov.nasa.worldwind.render.Material;
-import java.beans.*;
-import gov.nasa.worldwind.geom.*;
-import gov.nasa.worldwind.util.measure.*;
 import java.io.*;
-import java.awt.*;
 import java.awt.event.*;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import javax.swing.*;
-import java.net.*;
 import java.util.*;
-import java.util.regex.*;
-import java.awt.print.*;
+
 /*
- * Listener for HTML report button - creates the HTML file
+ * \class genHTMLWeatherReport Listener for HTML report button - creates the HTML file
  */
-
 public class genHTMLWeatherReport implements ActionListener {
-
     Vector<WeatherElements> elem;
     WWJ parent;
 
@@ -50,22 +27,39 @@ public class genHTMLWeatherReport implements ActionListener {
                     out.write("<html>"
                             + "<head>"
                             + "<title>Weather report</title>"
-                            + "<script type=\"text/javascript\" src=\"http://www.google.com/jsapi\"></script>"
+                            + "<script type=\"text/javascript\" "+
+                            "src=\"http://www.google.com/jsapi\"></script>"
                             + "<script type=\"text/javascript\">"
-                            + "google.load('visualization', '1.1', {packages: ['controls']});"
+                            + "google.load('visualization', '1.1', "+
+                            "{packages: ['controls']});"
                             + "</script>"
-                            + "<script type=\"text/javascript\">function drawVisualization() {"
-                            + "var data = google.visualization.arrayToDataTable([");
-                    out.write("['Day', 'Weather', 'Condition', 'Temperature', 'Rain', 'Wind', 'date', 'wind Speed', 'maxTemp', 'minTemp', 'rain'],");
+                            + "<script type=\"text/javascript\">"+
+                            "function drawVisualization() {"
+                            + "var data = google."+
+                            "visualization.arrayToDataTable([");
+                    out.write("['Day', 'Weather', 'Condition', 'Temperature',"+
+                            " 'Rain', 'Wind', 'date', 'wind Speed', "+
+                            "'maxTemp', 'minTemp', 'rain'],");
                     for (int i = 0; i < elem.size(); i++) {
 
-                        String weatherImg = "<img src=\"" + elem.elementAt(i).imgLink + "\" />";
-                        String temp = "Max. temp.:<br />" + elem.elementAt(i).tempMax + "<br />Min. tem.:<br />" + elem.elementAt(i).tempMin;
+                        String weatherImg = "<img src=\"" + 
+                                elem.elementAt(i).imgLink + 
+                                "\" />";
+                        String temp = "Max. temp.:<br />" +
+                                elem.elementAt(i).tempMax +
+                                "<br />Min. tem.:<br />" +
+                                elem.elementAt(i).tempMin;
                         String wind = ""
-                                + "<img src=\"http://www.worldweatheronline.com/App_Themes/Default/images/wind/" + elem.elementAt(i).windDir + ".png\" /><br />"
-                                + elem.elementAt(i).windSpeed + "Km/h<br />"
-                                + elem.elementAt(i).windDir + "<br />("
-                                + elem.elementAt(i).windDirDegree + ")";
+                                + "<img src=\"http://www.worldweatheronline."+
+                                "com/App_Themes/Default/images/wind/" +
+                                elem.elementAt(i).windDir +
+                                ".png\" /><br />"
+                                + elem.elementAt(i).windSpeed +
+                                "Km/h<br />"
+                                + elem.elementAt(i).windDir + 
+                                "<br />("
+                                + elem.elementAt(i).windDirDegree +
+                                ")";
                         out.write("['"
                                 + elem.elementAt(i).date + "', '"
                                 + weatherImg + "', '"
@@ -82,7 +76,8 @@ public class genHTMLWeatherReport implements ActionListener {
                         }
                     }
                     out.write("]);");
-                    out.write("var latitude = new google.visualization.ControlWrapper({\n"
+                    out.write("var latitude = "+
+                            "new google.visualization.ControlWrapper({\n"
                             + "'controlType': 'NumberRangeFilter',\n"
                             + "'containerId': 'latitude',\n"
                             + "'options': {\n"
@@ -90,7 +85,8 @@ public class genHTMLWeatherReport implements ActionListener {
                             + "'ui': {'labelStacking': 'vertical'}\n"
                             + "}\n"
                             + "});\n"
-                            + "var longitude = new google.visualization.ControlWrapper({\n"
+                            + "var longitude = "+
+                            "new google.visualization.ControlWrapper({\n"
                             + "'controlType': 'NumberRangeFilter',\n"
                             + "'containerId': 'longitude',\n"
                             + "'options': {\n"
@@ -98,7 +94,8 @@ public class genHTMLWeatherReport implements ActionListener {
                             + "'ui': {'labelStacking': 'vertical'}\n"
                             + "}\n"
                             + "});\n"
-                            + "var elevation = new google.visualization.ControlWrapper({\n"
+                            + "var elevation = "+
+                            "new google.visualization.ControlWrapper({\n"
                             + "'controlType': 'NumberRangeFilter',\n"
                             + "'containerId': 'elevation',\n"
                             + "'options': {\n"
@@ -106,7 +103,8 @@ public class genHTMLWeatherReport implements ActionListener {
                             + "'ui': {'labelStacking': 'vertical'}\n"
                             + "}\n"
                             + "});\n"
-                            + "var table = new google.visualization.ChartWrapper({\n"
+                            + "var table = "+
+                            "new google.visualization.ChartWrapper({\n"
                             + "'chartType': 'Table',\n"
                             + "'containerId': 'chart3',\n"
                             + "'view': {'columns': [0, 1, 2, 3, 4, 5]},\n"
@@ -116,7 +114,8 @@ public class genHTMLWeatherReport implements ActionListener {
                             + "'width': '800px'\n"
                             + "}});\n");
 
-                    out.write("  var categoryPicker = new google.visualization.ControlWrapper({\n"
+                    out.write("  var categoryPicker = "+
+                            "new google.visualization.ControlWrapper({\n"
                             + "'controlType': 'CategoryFilter',\n"
                             + "'containerId': 'control2',\n"
                             + "'options': {\n"
@@ -129,7 +128,8 @@ public class genHTMLWeatherReport implements ActionListener {
                             + "}\n"
                             + "});\n");
 
-                    out.write("var barChart = new google.visualization.ChartWrapper({\n"
+                    out.write("var barChart = "+
+                            "new google.visualization.ChartWrapper({\n"
                             + "'chartType': 'BarChart',\n"
                             + "'containerId': 'chart1',\n"
                             + "'options': {\n"
@@ -140,8 +140,12 @@ public class genHTMLWeatherReport implements ActionListener {
                             + "'view': {'columns': [6, 8, 9]}\n"
                             + "});\n");
 
-                    out.write("myView = new google.visualization.DataView(data);\n"
-                            + "new google.visualization.Dashboard(document.getElementById('dashboard')).bind([latitude, longitude, elevation, categoryPicker], [table]).bind(categoryPicker, barChart).draw(myView);\n"
+                    out.write("myView = "+
+                            "new google.visualization.DataView(data);\n"
+                            + "new google.visualization.Dashboard(document."+
+                            "getElementById('dashboard')).bind([latitude, "+
+                            "longitude, elevation, categoryPicker], [table])."+
+                            "bind(categoryPicker, barChart).draw(myView);\n"
                             + "}\n"
                             + "google.setOnLoadCallback(drawVisualization);\n"
                             + "</script>\n"
@@ -176,7 +180,8 @@ public class genHTMLWeatherReport implements ActionListener {
                     out.close();
                     f.close();
                 } catch (Exception exp) {
-                    parent.standardDialogBox("Output exception", "Error saving file");
+                    parent.standardDialogBox("Output exception", 
+                            "Error saving file");
                 }
 
             }
