@@ -102,7 +102,7 @@ class WWJ extends JFrame {
         //Surface measurement button setup
         JButton ruler = new JButton(new ImageIcon("images/metalruler.jpg"));
         ruler.setBorder(null);
-        ruler.addMouseListener(new SurfaceMouseListener(surfacePanel, surfaceField));
+        ruler.addMouseListener(new SurfaceMouseListener(surfacePanel, surfaceField, measureTool, ww, this));
         lay.add(ruler, new Integer(2));
 
 
@@ -427,75 +427,6 @@ class WWJ extends JFrame {
         ww.addSelectListener(new ViewControlsSelectListener(ww, viewControlsLayer));
         LayerList layers = ww.getModel().getLayers();
         layers.add(0, viewControlsLayer);
-    }
-
-    /*
-     * Mouse listener for 
-     * @panel - surface response panel
-     * @field - field for write surface dimension
-     */
-    class SurfaceMouseListener implements MouseListener {
-
-        JPanel panel;
-        JTextField field;
-
-        public SurfaceMouseListener(JPanel panel, JTextField field) {
-            this.panel = panel;
-            this.field = field;
-        }
-
-        public void mouseClicked(MouseEvent e) {
-            JButton bt = ((JButton) e.getSource());
-            //if the tool is armed disarm it, else arm it
-            if (measureTool.isArmed()) {
-                measureTool.clear();
-                measureTool.setArmed(false);
-                ((Component) ww).setCursor(Cursor.getDefaultCursor());
-                panel.setVisible(false);
-                bt.setIcon(new ImageIcon("images/metalrulerOver.jpg"));
-            } else {
-                measureTool.setArmed(true);
-                ((Component) ww).setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
-                panel.setVisible(true);
-                //anonim listener
-                measureTool.addPropertyChangeListener(new PropertyChangeListener() {
-
-                    public void propertyChange(PropertyChangeEvent event) {
-                        field.setText("" + (measureTool.getArea() / 1000000));
-                    }
-                });
-                bt.setIcon(new ImageIcon("images/stopMeasureOver.jpg"));
-            }
-            tagContent("2D/3D Globe", "Select points and measure the surface described", bt.getLocationOnScreen());
-            infoTag.setVisible(true);
-        }
-
-        public void mouseEntered(MouseEvent e) {
-            JButton b = (JButton) e.getSource();
-            if (measureTool.isArmed()) {
-                b.setIcon(new ImageIcon("images/stopMeasureOver.jpg"));
-
-            } else {
-                b.setIcon(new ImageIcon("images/metalrulerOver.jpg"));
-            }
-            infoTag.setVisible(true);
-        }
-
-        public void mouseExited(MouseEvent e) {
-            JButton b = (JButton) e.getSource();
-            if (measureTool.isArmed()) {
-                b.setIcon(new ImageIcon("images/stopMeasure.jpg"));
-            } else {
-                b.setIcon(new ImageIcon("images/metalruler.jpg"));
-            }
-            infoTag.setVisible(false);
-        }
-
-        public void mousePressed(MouseEvent e) {
-        }
-
-        public void mouseReleased(MouseEvent e) {
-        }
     }
 
     /*
