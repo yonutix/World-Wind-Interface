@@ -3,29 +3,13 @@
  * and open the template in the editor.
  */
 package worldwind;
-import gov.nasa.worldwind.globes.*;
-import gov.nasa.worldwind.*;
-import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
-import gov.nasa.worldwind.layers.*;
-import gov.nasa.worldwind.poi.*;
-import gov.nasa.worldwind.render.*;
-import gov.nasa.worldwind.layers.MarkerLayer;
-import gov.nasa.worldwind.render.markers.*;
-import gov.nasa.worldwind.render.Material;
-import java.beans.*;
-import gov.nasa.worldwind.geom.*;
-import gov.nasa.worldwind.util.measure.*;
-import java.io.*;
-import java.awt.*;
+
 import java.awt.event.*;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import javax.swing.*;
-import java.net.*;
 import java.util.*;
-import java.util.regex.*;
-import java.awt.print.*;
+
 /*
+ * \class EarthqakeActionListener
  * Listener for creating the earthquakes report in JFrame
  */
 class EarthqakeActionListener implements ActionListener {
@@ -35,7 +19,11 @@ class EarthqakeActionListener implements ActionListener {
     Vector<EarthquakeContentElement> elem;
     JButton prev, next;
 
-    public EarthqakeActionListener(JTable table, JTextField jtf, Vector<EarthquakeContentElement> elem, JButton prev, JButton next) {
+    public EarthqakeActionListener(JTable table, 
+            JTextField jtf, 
+            Vector<EarthquakeContentElement> elem, 
+            JButton prev, 
+            JButton next) {
         this.table = table;
         this.jtf = jtf;
         this.elem = elem;
