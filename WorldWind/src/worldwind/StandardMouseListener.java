@@ -164,3 +164,46 @@ import java.awt.print.*;
         public void mouseReleased(MouseEvent e) {
         }
     }
+
+
+    /*
+     * Listener for exiting the main frame
+     */
+
+    class MenuActionListener implements ActionListener {
+        WWJ parent;
+        JFrame f;
+
+        public MenuActionListener(WWJ parent) {
+            this.f = (JFrame)parent;
+            this.parent = parent;
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            if (((JMenuItem) e.getSource()).getName().compareTo("exit") == 0) {
+                System.exit(-1);
+            }
+            if (((JMenuItem) e.getSource()).getName().compareTo("about") == 0) {
+                parent.aboutWindow();
+            }
+        }
+    }
+
+    /*
+     * closing the "about" window
+     */
+
+    class ButtonActionListener implements ActionListener {
+
+        JDialog f;
+
+        public ButtonActionListener(JDialog f) {
+            this.f = f;
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            if (((JButton) e.getSource()).getName().compareTo("exit") == 0) {
+                f.dispose();
+            }
+        }
+    }
