@@ -8,7 +8,6 @@ import java.awt.event.*;
 import java.beans.*;
 import java.awt.*;
 import gov.nasa.worldwind.util.measure.*;
-import gov.nasa.worldwind.*;
 import gov.nasa.worldwind.awt.*;
 /*
  * Mouse listener for 

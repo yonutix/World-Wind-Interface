@@ -118,7 +118,7 @@ class WWJ extends JFrame {
         zoomPanel.setBackground(Color.BLACK);
         zoomPanel.setLayout(new BoxLayout(zoomPanel, BoxLayout.PAGE_AXIS));
         JComboBox zoomComboBox = new JComboBox();
-        zoomComboBox.addActionListener(new ComboBoxZoomActionListener(zoomLoc));
+        zoomComboBox.addActionListener(new ComboBoxZoomActionListener(this, zoomLoc));
         zoomComboBox.setVisible(false);
         JButton zoomButton = new JButton("Find");
         zoomButton.setForeground(Color.white);
@@ -127,7 +127,7 @@ class WWJ extends JFrame {
         zoomResponse.setOpaque(false);
         zoomResponse.setForeground(Color.white);
         zoomResponse.setEditable(false);
-        zoomButton.addActionListener(new TextButtonActionListener(zoomLoc, zoomComboBox, zoomResponse));
+        zoomButton.addActionListener(new TextButtonActionListener(this, zoomLoc, zoomComboBox, zoomResponse));
         zoomPanel.add(zoomLabel);
         zoomPanel.add(zoomLoc);
         zoomPanel.add(zoomButton);
@@ -151,7 +151,7 @@ class WWJ extends JFrame {
         JPanel viaPanel = new JPanel();
         viaPanel.setLayout(new BoxLayout(viaPanel, BoxLayout.PAGE_AXIS));
         JButton viaAdd = new JButton("Add via");
-        viaAdd.addActionListener(new ViaAddActionListener(viaPanel));
+        viaAdd.addActionListener(new ViaAddActionListener(this, viaPanel));
         viaPanel.add(viaAdd);
 
 
@@ -252,7 +252,7 @@ class WWJ extends JFrame {
         JButton bt = new JButton(new ImageIcon(imageAddr));
         bt.setBorder(null);
         bt.setName(name);
-        bt.addMouseListener(new StandardMouseListener());
+        bt.addMouseListener(new StandardMouseListener(this, ww));
         bt.setBounds(r);
         return bt;
     }
@@ -273,138 +273,7 @@ class WWJ extends JFrame {
         //ralative to window
         infoTag.setBounds(p.x - this.getLocation().x, p.y - this.getLocation().y, 180, 50);
     }
-    /*
-     * Standard mouse listener
-     */
 
-    class StandardMouseListener implements MouseListener {
-//buttons images changing on mouse over
-
-        public void mouseClicked(MouseEvent e) {
-            JButton b = (JButton) e.getSource();
-            if (b.getName().compareTo("globe") == 0) {
-                if (!isFlatGlobe()) {
-                    ww.getModel().setGlobe(new EarthFlat());
-                    b.setIcon(new ImageIcon("images/earthOver.jpg"));
-                } else {
-                    ww.getModel().setGlobe(new Earth());
-                    b.setIcon(new ImageIcon("images/flatearthOver.jpg"));
-                }
-            }
-            if (b.getName().compareTo("boundaries") == 0) {
-                if (politicalBoundries.isEnabled()) {
-                    politicalBoundries.setEnabled(false);
-                    b.setIcon(new ImageIcon("images/boundariesOver.jpg"));
-                } else {
-                    politicalBoundries.setEnabled(true);
-                    b.setIcon(new ImageIcon("images/deactivateBoundariesOver.jpg"));
-                }
-            }
-            if (b.getName().compareTo("earthquake") == 0) {
-                b.setIcon(new ImageIcon("images/earthquakeOver.jpg"));
-                eartquakeFrame();
-            }
-            if (b.getName().compareTo("weather") == 0) {
-                b.setIcon(new ImageIcon("images/weatherOver.jpg"));
-                weatherFrame();
-            }
-            if (b.getName().compareTo("ss") == 0) {
-                b.setIcon(new ImageIcon("images/screenshotOver.jpg"));
-                takeScreenshot();
-            }
-            if (b.getName().compareTo("open") == 0) {
-                b.setIcon(new ImageIcon("images/openFIleOver.jpg"));
-                loadImage();
-            }
-
-        }
-
-        public void mouseEntered(MouseEvent e) {
-            JButton b = (JButton) e.getSource();
-            if (b.getName().compareTo("globe") == 0) {
-                if (!isFlatGlobe()) {
-                    b.setIcon(new ImageIcon("images/flatearthOver.jpg"));
-                } else {
-                    b.setIcon(new ImageIcon("images/earthOver.jpg"));
-                }
-                tagContent("2D/3D Globe", "See 3D or 2D globe", b.getLocationOnScreen());
-                infoTag.setVisible(true);
-            }
-            if (b.getName().compareTo("boundaries") == 0) {
-                if (politicalBoundries.isEnabled()) {
-                    b.setIcon(new ImageIcon("images/deactivateBoundariesOver.jpg"));
-                } else {
-                    b.setIcon(new ImageIcon("images/boundariesOver.jpg"));
-                }
-                tagContent("Political boundaries", "Turn on/off political boundaries", b.getLocationOnScreen());
-                infoTag.setVisible(true);
-
-            }
-            if (b.getName().compareTo("earthquake") == 0) {
-                b.setIcon(new ImageIcon("images/earthquakeOver.jpg"));
-                tagContent("Earthquakes", "See earthquakes reports", b.getLocationOnScreen());
-                infoTag.setVisible(true);
-            }
-            if (b.getName().compareTo("weather") == 0) {
-                b.setIcon(new ImageIcon("images/weatherOver.jpg"));
-                tagContent("Weather", "See weather Reports", b.getLocationOnScreen());
-                infoTag.setVisible(true);
-            }
-            if (b.getName().compareTo("ss") == 0) {
-                b.setIcon(new ImageIcon("images/screenshotOver.jpg"));
-                tagContent("Screenshot", "Take a screenshot", b.getLocationOnScreen());
-                infoTag.setVisible(true);
-            }
-            if (b.getName().compareTo("open") == 0) {
-                b.setIcon(new ImageIcon("images/openFIleOver.jpg"));
-                tagContent("Open image", "Open a specific image", b.getLocationOnScreen());
-                infoTag.setVisible(true);
-            }
-        }
-
-        public void mouseExited(MouseEvent e) {
-            JButton b = (JButton) e.getSource();
-            if (b.getName().compareTo("globe") == 0) {
-                if (!isFlatGlobe()) {
-                    b.setIcon(new ImageIcon("images/flatearth.jpg"));
-                } else {
-                    b.setIcon(new ImageIcon("images/earth.jpg"));
-                }
-                infoTag.setVisible(false);
-            }
-
-            if (b.getName().compareTo("boundaries") == 0) {
-                if (politicalBoundries.isEnabled()) {
-                    b.setIcon(new ImageIcon("images/deactivateBoundaries.jpg"));
-                } else {
-                    b.setIcon(new ImageIcon("images/boundaries.jpg"));
-                }
-                infoTag.setVisible(false);
-            }
-            if (b.getName().compareTo("earthquake") == 0) {
-                b.setIcon(new ImageIcon("images/earthquake.jpg"));
-                infoTag.setVisible(false);
-            }
-            if (b.getName().compareTo("weather") == 0) {
-                b.setIcon(new ImageIcon("images/weather.jpg"));
-                infoTag.setVisible(false);
-            }
-            if (b.getName().compareTo("ss") == 0) {
-                b.setIcon(new ImageIcon("images/screenshot.png"));
-                infoTag.setVisible(false);
-            }
-            if (b.getName().compareTo("open") == 0) {
-                b.setIcon(new ImageIcon("images/openFIle.jpg"));
-                infoTag.setVisible(false);
-            }
-        }
-
-        public void mousePressed(MouseEvent e) {
-        }
-
-        public void mouseReleased(MouseEvent e) {
-        }
-    }
 
     /*
      * Disable a specific layer by name
@@ -429,25 +298,7 @@ class WWJ extends JFrame {
         layers.add(0, viewControlsLayer);
     }
 
-    /*
-     * Listener for a combo box wich have a link with a text field
-     * @input text field to make change in
-     */
-    class ComboBoxMeasureActionLsitener implements ActionListener {
 
-        JTextField input;
-
-        public ComboBoxMeasureActionLsitener(JTextField input) {
-            this.input = input;
-        }
-
-        public void actionPerformed(ActionEvent event) {
-            JComboBox cb = (JComboBox) event.getSource();
-            if (cb.getSelectedItem() != null) {
-                input.setText(cb.getSelectedItem().toString());
-            }
-        }
-    }
 
     void standardDialogBox(String title, String content) {
         JDialog standardDialogBox = new JDialog(this, title, true);
@@ -500,93 +351,9 @@ class WWJ extends JFrame {
     public boolean isFlatGlobe() {
         return ww.getModel().getGlobe() instanceof FlatGlobe;
     }
-    /*
-     * Action listener for "Via" buttons
-     * @vb - panel to add items in
-     */
 
-    class ViaAddActionListener implements ActionListener {
 
-        JPanel vb;
 
-        public ViaAddActionListener(JPanel vb) {
-            this.vb = vb;
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            JTextField jtf = new JTextField("via", 15);
-            vb.add(jtf);
-            JComboBox jcb = new JComboBox();
-            jcb.addActionListener(new ComboBoxMeasureActionLsitener(jtf));
-            jcb.setVisible(false);
-            JButton del = new JButton("Delete");
-            del.addActionListener(new DeleteTextFieldActionListener(vb, jtf, del, jcb));
-            vb.add(del);
-            vb.add(jcb);
-            pack();
-        }
-    }
-
-    /*
-     * Listener for deleting section
-     * @vb  - panel to remove from
-     * @viaTextField - text field to be removed
-     * @removeTextFieldButton - button to be removed
-     * @jcb hidden or visible combo box to be removed
-     */
-    class DeleteTextFieldActionListener implements ActionListener {
-
-        JPanel vb;
-        JTextField viaTextFields;
-        JButton removeTextFieldButton;
-        JComboBox jcb;
-
-        public DeleteTextFieldActionListener(JPanel vb, JTextField viaTextFields, JButton removeTextFieldButton, JComboBox jcb) {
-            this.vb = vb;
-            this.viaTextFields = viaTextFields;
-            this.removeTextFieldButton = removeTextFieldButton;
-            this.jcb = jcb;
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            vb.remove(viaTextFields);
-            vb.remove(removeTextFieldButton);
-            vb.remove(jcb);
-            pack();
-        }
-    }
-    /*
-     * Listener for "Zoom" combo box
-     * @input - text field to be modified
-     */
-
-    class ComboBoxZoomActionListener implements ActionListener {
-
-        JTextField input;
-
-        public ComboBoxZoomActionListener(JTextField input) {
-            this.input = input;
-        }
-
-        public void actionPerformed(ActionEvent event) {
-            JComboBox cb = (JComboBox) event.getSource();
-            if (cb.getSelectedItem() != null) {
-                PointOfInterest selectedPoi = (PointOfInterest) cb.getSelectedItem();
-                mkr.clear();
-                MarkerAttributes attr = new BasicMarkerAttributes(Material.RED, BasicMarkerShape.SPHERE, 1d, 10, 5);
-                Position poz = new Position(selectedPoi.getLatlon(), 0);
-                Marker mk = new BasicMarker(poz, attr);
-                mk.setPosition(poz);
-                mkr.add(mk);
-                Mlayer.setMarkers(mkr);
-                ww.redraw();
-                input.setText(cb.getSelectedItem().toString());
-                ww.redraw();
-                ww.getView().goTo(new Position(selectedPoi.getLatlon(), 0), 25e3);
-            }
-            cb.setVisible(false);
-        }
-    }
     /*
      * @jtf -  string for search
      * returns a list with all point found
@@ -635,95 +402,13 @@ class WWJ extends JFrame {
 
 
     }
-    /*
-     * Action lsitener for "zoom" button
-     */
 
-    class TextButtonActionListener implements ActionListener {
-
-        JTextField txtF;
-        JComboBox jcb;
-        JTextArea jta;
-
-        TextButtonActionListener(JTextField txtF, JComboBox jcb, JTextArea jta) {
-            this.txtF = txtF;
-            this.jcb = jcb;
-            this.jta = jta;
-        }
-
-        public void actionPerformed(ActionEvent event) {
-            jta.setVisible(false);
-            jcb.removeAllItems();
-            jcb.setVisible(false);
-
-
-            java.util.List<PointOfInterest> list = new ArrayList<PointOfInterest>();
-            String[] searchedText = txtF.getText().trim().split("[,]");
-            ArrayList<String> wordsList = new ArrayList<String>();
-
-            gz = new YahooGazetteer();
-            for (String s : searchedText) {
-                if (s.trim().compareTo("") != 0) {
-                    wordsList.add(s.trim());
-                }
-            }
-            Iterator it = wordsList.iterator();
-            if (wordsList.isEmpty()) {
-                jta.setText("Input invalid");
-                jta.setVisible(true);
-                mkr.clear();
-            }
-            if (wordsList.size() == 1) {
-                list = gz.findPlaces(searchedText[0]);
-            }
-            if (wordsList.size() == 2) {
-                Matcher matcher = (Pattern.compile("[0-9]")).matcher(searchedText[1]);
-                if (matcher.find()) {
-                    searchedText[0] = searchedText[0].trim();
-                    searchedText[1] = searchedText[1].trim();
-                    list.add(parseCoordinates(searchedText));
-                } else {
-                    list = gz.findPlaces(searchedText[0].trim() + "+" + searchedText[1].trim());
-                }
-            }
-            if (wordsList.size() > 2) {
-                String buff = new String();
-                while (it.hasNext()) {
-                    buff = buff + (String) it.next() + "+";
-                }
-                buff = buff.substring(0, buff.length() - 1);
-                list = gz.findPlaces(buff);
-            }
-            jcb.setVisible(false);
-            if (!list.isEmpty()) {
-                if (list.size() == 1) {
-                    Position poz = new Position(list.get(0).getLatlon(), 0);
-                    ww.getView().goTo(poz, 25e3);
-                    mkr.clear();
-                    MarkerAttributes attr = new BasicMarkerAttributes(Material.RED, BasicMarkerShape.SPHERE, 1d, 10, 5);
-                    Marker mk = new BasicMarker(poz, attr);
-                    mk.setPosition(poz);
-                    mkr.add(mk);
-                    Mlayer.setMarkers(mkr);
-                    ww.redraw();
-                } else {
-                    for (PointOfInterest pt : list) {
-                        jcb.addItem(pt);
-                    }
-                    jcb.setVisible(true);
-                }
-            } else {
-                jta.setText("Locatie negasita");
-                jta.setVisible(true);
-            }
-        }
-    }
 
     /*
      * if in the text field are passed coordinates
      * @coords[] has two elements longitude and latitude
      */
-    private PointOfInterest parseCoordinates(String coords[]) {
+    public PointOfInterest parseCoordinates(String coords[]) {
         if (isDecimalDegrees(coords)) {
             Double d1 = Double.parseDouble(coords[0].trim());
             Double d2 = Double.parseDouble(coords[1].trim());
@@ -775,7 +460,7 @@ class WWJ extends JFrame {
                 container.add(imgLabel);
                 JPanel buttons = new JPanel();
                 JButton print = new JButton("Print");
-                print.addActionListener(new PrintImageActionListener(image));
+                print.addActionListener(new PrintImageActionListener(this, image));
                 buttons.add(print);
                 container.add(buttons);
 
@@ -807,8 +492,8 @@ class WWJ extends JFrame {
             JPanel buttons = new JPanel();
             JButton save = new JButton("Save");
             JButton print = new JButton("Print");
-            save.addActionListener(new SaveImageActionListener(capture));
-            print.addActionListener(new PrintImageActionListener(capture));
+            save.addActionListener(new SaveImageActionListener(this, capture));
+            print.addActionListener(new PrintImageActionListener(this, capture));
             buttons.add(save);
             buttons.add(print);
             container.add(buttons);
@@ -818,492 +503,10 @@ class WWJ extends JFrame {
         wf.add(container);
         wf.setVisible(true);
     }
-    /*
-     * Listener for print button
-     * @imgb - image to be printed
-     */
-
-    class PrintImageActionListener implements ActionListener {
-
-        BufferedImage imgb;
-
-        public PrintImageActionListener(BufferedImage imgb) {
-            this.imgb = imgb;
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            final Image img = new ImageIcon(imgb).getImage();
-            PrinterJob printJob = PrinterJob.getPrinterJob();
-            printJob.setPrintable(new Printable() {
-
-                public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
-                    if (pageIndex != 0) {
-                        return NO_SUCH_PAGE;
-                    }
-                    graphics.drawImage(img, 0, 0, img.getWidth(null), img.getHeight(null), null);
-                    return PAGE_EXISTS;
-                }
-            });
-            if (printJob.printDialog()) {
-                try {
-                    printJob.print();
-                } catch (Exception prt) {
-                    standardDialogBox("Error", "Error printing the image");
-                }
-            }
-        }
-    }
-    /*
-     * listener for saving button 
-     */
-
-    class SaveImageActionListener implements ActionListener {
-
-        BufferedImage img;
-
-        public SaveImageActionListener(BufferedImage img) {
-            this.img = img;
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            JFileChooser fc = new JFileChooser(new File("."));
-            int returnVal = fc.showSaveDialog(ww);
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                try {
-                    ImageIO.write(img, "bmp", new File(fc.getSelectedFile().getPath()));
-                } catch (IOException ex) {
-                    standardDialogBox("Output exception", "Error trying writing file");
-                }
-            }
-        }
-    }
-    /*
-     * class for weather characteristics
-     */
-
-    class WeatherElements {
-
-        String date, rain, tempMax, tempMin, weatherStatus, imgLink, windSpeed, windDirDegree, windDir;
-
-        public WeatherElements(String date,
-                String rain,
-                String tempMax,
-                String tempMin,
-                String weatherStatus,
-                String imgLink,
-                String windDirDegree,
-                String windDir,
-                String windSpeed) {
-            this.date = date;
-            this.rain = rain;
-            this.tempMax = tempMax;
-            this.tempMin = tempMin;
-            this.weatherStatus = weatherStatus;
-            this.imgLink = imgLink;
-            this.windSpeed = windSpeed;
-            this.windDirDegree = windDirDegree;
-            this.windDir = windDir;
-        }
-    }
-    /*
-     * Listener for next, previous button from JFrame with weather
-     */
-
-    class WeatherButtonsActionListener implements ActionListener {
-
-        JButton prev, next;
-        JLabel weatherIcon;
-        JLabel dateout;
-        JLabel weatherstatus;
-        JLabel temperature;
-        JLabel rain;
-        JLabel wind;
-        Vector<WeatherElements> elem;
-        JTextField pgNum;
-
-        public WeatherButtonsActionListener(JButton prev,
-                JButton next,
-                JLabel weatherIcon,
-                JLabel dateout,
-                JLabel weatherstatus,
-                JLabel temperature,
-                JLabel rain,
-                JLabel wind,
-                Vector<WeatherElements> elem,
-                JTextField pgNum) {
-            this.prev = prev;
-            this.next = next;
-            this.weatherIcon = weatherIcon;
-            this.dateout = dateout;
-            this.weatherstatus = weatherstatus;
-            this.temperature = temperature;
-            this.rain = rain;
-            this.wind = wind;
-            this.elem = elem;
-            this.pgNum = pgNum;
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            Integer tc = Integer.parseInt(pgNum.getText());
-            int i = tc.intValue();
-            if (((JButton) e.getSource()).getName().compareTo("prev") == 0) {
-                i--;
-                if (i == 1) {
-                    prev.setEnabled(false);
-                } else {
-                    prev.setEnabled(true);
-                }
-                pgNum.setText("" + (i));
-                next.setEnabled(true);
-                i--;
-            }
-            if (((JButton) e.getSource()).getName().compareTo("next") == 0) {
-
-                if (i + 1 == elem.size()) {
-                    next.setEnabled(false);
-                } else {
-                    next.setEnabled(true);
-                }
-                pgNum.setText("" + (i + 1));
-                prev.setEnabled(true);
-            }
-            dateout.setText(elem.elementAt(i).date);
-            weatherIcon.setText("<html><img src=\"" + elem.elementAt(i).imgLink + "\" /></html>");
-            weatherstatus.setText("<html><h1>" + elem.elementAt(i).weatherStatus + "</h1></html>");
-            temperature.setText("<html>Temperatures:<br />Temp min: " + elem.elementAt(i).tempMin + "°C<br />Temp max: " + elem.elementAt(i).tempMax + "°C</html>");
-            rain.setText("Rain: " + elem.elementAt(i).rain + " mm");
-            wind.setText("<html>Wind: <br />"
-                    + "<img src=\"http://www.worldweatheronline.com/App_Themes/Default/images/wind/" + elem.elementAt(i).windDir + ".png\" /><br />"
-                    + "Wind speed: " + elem.elementAt(i).windSpeed + "Km/h<br />"
-                    + elem.elementAt(i).windDir + "(" + elem.elementAt(i).windDirDegree + "°)</html>");
-        }
-    }
-    /*
-     * Listener for HTML report button - creates the HTML file
-     */
-
-    class genHTMLWeatherReport implements ActionListener {
-
-        Vector<WeatherElements> elem;
-
-        public genHTMLWeatherReport(Vector<WeatherElements> elem) {
-            this.elem = elem;
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            try {
-                JFileChooser fc = new JFileChooser(new File("."));
-                int returnVal = fc.showSaveDialog(ww);
-                if (returnVal == JFileChooser.APPROVE_OPTION) {
-                    try {
-                        FileWriter f = new FileWriter("weather.html");
-                        BufferedWriter out = new BufferedWriter(f);
-                        out.write("<html>"
-                                + "<head>"
-                                + "<title>Weather report</title>"
-                                + "<script type=\"text/javascript\" src=\"http://www.google.com/jsapi\"></script>"
-                                + "<script type=\"text/javascript\">"
-                                + "google.load('visualization', '1.1', {packages: ['controls']});"
-                                + "</script>"
-                                + "<script type=\"text/javascript\">function drawVisualization() {"
-                                + "var data = google.visualization.arrayToDataTable([");
-                        out.write("['Day', 'Weather', 'Condition', 'Temperature', 'Rain', 'Wind', 'date', 'wind Speed', 'maxTemp', 'minTemp', 'rain'],");
-                        for (int i = 0; i < elem.size(); i++) {
-
-                            String weatherImg = "<img src=\"" + elem.elementAt(i).imgLink + "\" />";
-                            String temp = "Max. temp.:<br />" + elem.elementAt(i).tempMax + "<br />Min. tem.:<br />" + elem.elementAt(i).tempMin;
-                            String wind = ""
-                                    + "<img src=\"http://www.worldweatheronline.com/App_Themes/Default/images/wind/" + elem.elementAt(i).windDir + ".png\" /><br />"
-                                    + elem.elementAt(i).windSpeed + "Km/h<br />"
-                                    + elem.elementAt(i).windDir + "<br />("
-                                    + elem.elementAt(i).windDirDegree + ")";
-                            out.write("['"
-                                    + elem.elementAt(i).date + "', '"
-                                    + weatherImg + "', '"
-                                    + elem.elementAt(i).weatherStatus + "', '"
-                                    + temp + "', '"
-                                    + elem.elementAt(i).rain + "', '"
-                                    + wind + "', '" + elem.elementAt(i).date + "', "
-                                    + elem.elementAt(i).windSpeed + ", "
-                                    + elem.elementAt(i).tempMax + ", "
-                                    + elem.elementAt(i).tempMin + ", "
-                                    + elem.elementAt(i).rain + "]");
-                            if (i != elem.size() - 1) {
-                                out.write(",\n");
-                            }
-                        }
-                        out.write("]);");
-                        out.write("var latitude = new google.visualization.ControlWrapper({\n"
-                                + "'controlType': 'NumberRangeFilter',\n"
-                                + "'containerId': 'latitude',\n"
-                                + "'options': {\n"
-                                + "  'filterColumnLabel': 'wind Speed',\n"
-                                + "'ui': {'labelStacking': 'vertical'}\n"
-                                + "}\n"
-                                + "});\n"
-                                + "var longitude = new google.visualization.ControlWrapper({\n"
-                                + "'controlType': 'NumberRangeFilter',\n"
-                                + "'containerId': 'longitude',\n"
-                                + "'options': {\n"
-                                + "  'filterColumnLabel': 'maxTemp',\n"
-                                + "'ui': {'labelStacking': 'vertical'}\n"
-                                + "}\n"
-                                + "});\n"
-                                + "var elevation = new google.visualization.ControlWrapper({\n"
-                                + "'controlType': 'NumberRangeFilter',\n"
-                                + "'containerId': 'elevation',\n"
-                                + "'options': {\n"
-                                + "  'filterColumnLabel': 'rain',\n"
-                                + "'ui': {'labelStacking': 'vertical'}\n"
-                                + "}\n"
-                                + "});\n"
-                                + "var table = new google.visualization.ChartWrapper({\n"
-                                + "'chartType': 'Table',\n"
-                                + "'containerId': 'chart3',\n"
-                                + "'view': {'columns': [0, 1, 2, 3, 4, 5]},\n"
-                                + "'options': {\n"
-                                + "       allowHtml: true,\n"
-                                + "       'dataTable' : data,\n"
-                                + "'width': '800px'\n"
-                                + "}});\n");
-
-                        out.write("  var categoryPicker = new google.visualization.ControlWrapper({\n"
-                                + "'controlType': 'CategoryFilter',\n"
-                                + "'containerId': 'control2',\n"
-                                + "'options': {\n"
-                                + " 'filterColumnLabel': 'date',\n"
-                                + "'ui': {\n"
-                                + "'labelStacking': 'vertical',\n"
-                                + " 'allowTyping': false,\n"
-                                + " 'allowMultiple': false\n"
-                                + " }\n"
-                                + "}\n"
-                                + "});\n");
-
-                        out.write("var barChart = new google.visualization.ChartWrapper({\n"
-                                + "'chartType': 'BarChart',\n"
-                                + "'containerId': 'chart1',\n"
-                                + "'options': {\n"
-                                + " 'width': 400,\n"
-                                + " 'height': 300,\n"
-                                + "  'chartArea': {top: 0, right: 0, bottom: 0}\n"
-                                + " },\n"
-                                + "'view': {'columns': [6, 8, 9]}\n"
-                                + "});\n");
-
-                        out.write("myView = new google.visualization.DataView(data);\n"
-                                + "new google.visualization.Dashboard(document.getElementById('dashboard')).bind([latitude, longitude, elevation, categoryPicker], [table]).bind(categoryPicker, barChart).draw(myView);\n"
-                                + "}\n"
-                                + "google.setOnLoadCallback(drawVisualization);\n"
-                                + "</script>\n"
-                                + "<style type=\"text/css\">\n"
-                                + "body{\n"
-                                + "	background-attachment:fixed;\n"
-                                + "	color:#900;\n"
-                                + "}\n"
-                                + "</style>\n"
-                                + "</head>\n"
-                                + "<body background=\"weatherTexture.jpg\">\n"
-                                + "<center>\n"
-                                + "<div id=\"dashboard\">\n"
-                                + "<table width=\"200\" border=\"0\">\n"
-                                + "  <tr>\n"
-                                + "    <td><div id=\"latitude\"></div></td>\n"
-                                + "    <td><div id=\"longitude\"></div></td>\n"
-                                + "  </tr>\n"
-                                + "  <tr>\n"
-                                + "    <td><div id=\"elevation\"></div></td>\n"
-                                + "    <td><div id=\"control2\"></div></td>\n"
-                                + "  </tr>\n"
-                                + "</table>\n"
-                                + "<div id=\"control1\"></div>\n"
-                                + "<BR>\n"
-                                + "<div id=\"chart3\"></div>\n"
-                                + "<div id = \"chart1\"></div>\n"
-                                + "</div>\n"
-                                + "</center>\n"
-                                + "</body>\n"
-                                + "</html>");
-                        out.close();
-                        f.close();
-                    } catch (Exception exp) {
-                        standardDialogBox("Output exception", "Error saving file");
-                    }
-
-                }
-            } catch (Exception ex) {
-                standardDialogBox("Output exception", "Error writing file");
-            }
-        }
-    }
-    /*
-     * Listener for getting weather in JFrame after the Submit button is pressed
-     */
-
-    class GetWeather implements ActionListener {
-
-        JTextField loc;
-        JSpinner daysnr;
-        JLabel weatherIcon;
-        JLabel dateout;
-        JLabel weatherstatus;
-        JLabel temperature;
-        JLabel rain;
-        JLabel wind;
-        JPanel buttons;
-        JPanel pageNum;
-
-        public GetWeather(JTextField loc,
-                JSpinner daysnr,
-                JLabel weatherIcon,
-                JLabel dateout,
-                JLabel weatherstatus,
-                JLabel temperature,
-                JLabel rain,
-                JLabel wind,
-                JPanel buttons,
-                JPanel pageNum) {
-            this.loc = loc;
-            this.daysnr = daysnr;
-            this.weatherIcon = weatherIcon;
-            this.dateout = dateout;
-            this.weatherstatus = weatherstatus;
-            this.temperature = temperature;
-            this.rain = rain;
-            this.wind = wind;
-            this.buttons = buttons;
-            this.pageNum = pageNum;
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            SpinnerNumberModel m = ((SpinnerNumberModel) daysnr.getModel());
-            int days = m.getNumber().intValue();
-            String location = ((JTextField) loc).getText();
-            java.util.List<PointOfInterest> points = textFieldPoints(location);
-            if (!points.isEmpty()) {
-                double latitude = points.get(0).getLatlon().latitude.getDegrees(),
-                        longitude = points.get(0).getLatlon().longitude.getDegrees();
-                //we want only the firs two decimals
-                latitude = ((double) ((long) (latitude * 100))) / 100;
-                longitude = ((double) ((long) (latitude * 100))) / 100;
-                String APIKey = "65ea00ff33143650113112";
-                String address = "http://free.worldweatheronline.com/feed/weather.ashx?" + "key="
-                        + APIKey + "&num_of_days=" + days + "&q=" + latitude + "," + longitude + "&format=json&cc=no";
-                try {
-                    URL link = new URL(address);
-                    URLConnection yc = link.openConnection();
-                    BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
-                    Vector<WeatherElements> elem = new Vector<WeatherElements>();
-                    String jsonFile = in.readLine();
-                    int i1 = 0, i2 = 0;
-                    for (int i = 0; i < days; i++) {
-                        i1 = jsonFile.indexOf("\"date\"", i2) + 9;
-                        i2 = jsonFile.indexOf("\"", i1);
-                        String date = jsonFile.substring(i1, i2);
-                        i2++;
-
-                        i1 = jsonFile.indexOf("\"precipMM\"", i2) + 13;
-                        i2 = jsonFile.indexOf("\"", i1);
-                        String rain = jsonFile.substring(i1, i2);
-                        i2++;
-
-                        i1 = jsonFile.indexOf("\"tempMaxC\"", i2) + 13;
-                        i2 = jsonFile.indexOf("\"", i1);
-                        String tempMax = jsonFile.substring(i1, i2);
-                        i2++;
-
-                        i1 = jsonFile.indexOf("\"tempMinC\"", i2) + 13;
-                        i2 = jsonFile.indexOf("\"", i1);
-                        String tempMin = jsonFile.substring(i1, i2);
-                        i2++;
-
-                        i1 = jsonFile.indexOf("\"value\"", i2) + 10;
-                        i2 = jsonFile.indexOf("\"", i1);
-                        String weatherStatus = jsonFile.substring(i1, i2);
-                        i2++;
-
-
-                        i1 = jsonFile.indexOf("\"value\"", i2) + 10;
-                        i2 = jsonFile.indexOf("\"", i1);
-                        String imgLink = jsonFile.substring(i1, i2);
-                        imgLink = imgLink.replace("\\", "");
-                        i2++;
-
-
-                        i1 = jsonFile.indexOf("\"winddirDegree\"", i2) + 18;
-                        i2 = jsonFile.indexOf("\"", i1);
-                        String windDirDegree = jsonFile.substring(i1, i2);
-                        i2++;
-
-
-                        i1 = jsonFile.indexOf("\"winddirection\"", i2) + 18;
-                        i2 = jsonFile.indexOf("\"", i1);
-                        String windDir = jsonFile.substring(i1, i2);
-                        i2++;
-
-                        i1 = jsonFile.indexOf("\"windspeedKmph\"", i2) + 18;
-                        i2 = jsonFile.indexOf("\"", i1);
-                        String windSpeed = jsonFile.substring(i1, i2);
-                        i2++;
-
-                        WeatherElements o = new WeatherElements(date, rain, tempMax, tempMin, weatherStatus, imgLink, windDirDegree, windDir, windSpeed);
-                        elem.add(o);
-
-                    }
-
-                    weatherIcon.setVisible(true);
-                    dateout.setText(elem.elementAt(0).date);
-                    weatherIcon.setText("<html><img src=\"" + elem.elementAt(0).imgLink + "\" /></html>");
-                    weatherstatus.setText("<html><h1>" + elem.elementAt(0).weatherStatus + "</h1></html>");
-                    temperature.setText("<html>Temperatures:<br />Temp min: " + elem.elementAt(0).tempMin + "°C<br />Temp max: " + elem.elementAt(0).tempMax + "°C</html>");
-                    rain.setText("Rain: " + elem.elementAt(0).rain + " mm");
-                    wind.setText("<html>Wind: <br />"
-                            + "<img src=\"http://www.worldweatheronline.com/App_Themes/Default/images/wind/" + elem.elementAt(0).windDir + ".png\" /><br />"
-                            + "Wind speed: " + elem.elementAt(0).windSpeed + "Km/h<br />"
-                            + elem.elementAt(0).windDir + "(" + elem.elementAt(0).windDirDegree + "°)</html>");
-
-                    buttons.removeAll();
-                    pageNum.removeAll();
-                    buttons.updateUI();
-                    pageNum.updateUI();
-
-
-                    JButton previous = new JButton("Previous");
-                    previous.setEnabled(false);
-                    previous.setName("prev");
-
-                    JButton next = new JButton("Next");
-                    next.setName("next");
-
-                    if (days == 1) {
-                        next.setEnabled(false);
-                    }
-
-                    JTextField current = new JTextField("1", 3);
-                    current.setEditable(false);
-                    JTextField maxNum = new JTextField("" + elem.size(), 3);
-                    maxNum.setEditable(false);
-                    pageNum.add(current);
-                    pageNum.add(maxNum);
 
 
 
-                    previous.addActionListener(new WeatherButtonsActionListener(previous, next, weatherIcon, dateout, weatherstatus, temperature, rain, wind, elem, current));
-                    next.addActionListener(new WeatherButtonsActionListener(previous, next, weatherIcon, dateout, weatherstatus, temperature, rain, wind, elem, current));
-                    buttons.add(next);
-                    buttons.add(previous);
-                    JButton genHTML = new JButton("Generate HTML");
-                    genHTML.addActionListener(new genHTMLWeatherReport(elem));
-                    buttons.add(genHTML);
 
-                } catch (Exception ex) {
-                    standardDialogBox("Fetching data error", "Somethnig goes wrong with the connection");
-                }
-            } else {
-                standardDialogBox("Incorrect input", "Input is incorrect!");
-            }
-        }
-    }
     /*
      * Creates the JFrame with weather
      */
@@ -1361,7 +564,7 @@ class WWJ extends JFrame {
 
         /*Submit button*/
         JButton submit = new JButton("Get weather");
-        submit.addActionListener(new GetWeather(locTextField, days, weatherIcon, date, weatherStatus, temperature, rain, wind, buttons, pageNum));
+        submit.addActionListener(new GetWeather(this, locTextField, days, weatherIcon, date, weatherStatus, temperature, rain, wind, buttons, pageNum));
 
         locPanel.add(submit);
         container.add(locPanel);
